@@ -1,0 +1,195 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <title>My Google Map</title>
+  <style>
+    #map{
+      height:600px;
+      width:100%;
+    }
+  </style>
+</head>
+<body>
+<div class="container-fluid">
+  <h1>DASHBOARD</h1>
+  <div class="row well">
+    <div class="col-sm-3 col-md-6 col-lg-4" ">
+      {% for detail in all_detail %}
+        {% if detail.vehicle_status == '1' %}
+          <div class="container">
+              <div class="row alert alert-success" >
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                 <img src="https://png.pngtree.com/element_origin_min_pic/16/11/25/f2db5b1fae65676bfd1ecae1dbfdc3a2.jpg" height="100px" width="100px" class="rounded-circle"><br>
+                  <strong>Vehicle Location: </strong>{{detail.current_vehicle_location}}<br>
+                  <strong> Last update: </strong> {{ detail.last_update}} second
+              </div>
+              <div class="col-sm-6 col-md-6 col-lg-6">
+                 <strong>Name:</strong> {{ detail.driver_name }}<br>
+
+                <strong>Contact:</strong> {{detail.driver_contact_number}}<br>
+
+                 <strong>Vehicle No.:</strong> {{detail.vehilce_number}}<br><br>
+                 <button class="btn btn-success btn-block">Running</button>
+              </div>
+              </div>
+            </div>
+        {% endif %}
+        {% if detail.vehicle_status == '-1' %}
+          <div class="container">
+              <div class="row alert alert-danger" >
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                 <img src="https://png.pngtree.com/element_origin_min_pic/16/11/25/f2db5b1fae65676bfd1ecae1dbfdc3a2.jpg" height="100px" width="100px" class="rounded-circle"><br>
+                  <strong>Vehicle Location: </strong>{{detail.current_vehicle_location}}<br>
+                  <strong> Last update: </strong> {{ detail.last_update}} second
+              </div>
+              <div class="col-sm-6 col-md-6 col-lg-6">
+                 <strong>Name:</strong> {{ detail.driver_name }}<br>
+
+                <strong>Contact:</strong> {{detail.driver_contact_number}}<br>
+
+                 <strong>Vehicle No.:</strong> {{detail.vehilce_number}}<br><br>
+                 <button class="btn btn-danger btn-block">Stopped</button>
+              </div>
+              </div>
+            </div>
+        {% endif %}
+
+        {% if detail.vehicle_status == '0'%}
+          <div class="container">
+              <div class="row alert alert-warning" >
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                 <img src="https://png.pngtree.com/element_origin_min_pic/16/11/25/f2db5b1fae65676bfd1ecae1dbfdc3a2.jpg" height="100px" width="100px" class="rounded-circle"><br>
+                  <strong>Vehicle Location: </strong>{{detail.current_vehicle_location}}<br>
+                  <strong> Last update: </strong> {{ detail.last_update}} second
+              </div>
+              <div class="col-sm-6 col-md-6 col-lg-6">
+                 <strong>Name:</strong> {{ detail.driver_name }}<br>
+
+                <strong>Contact:</strong> {{detail.driver_contact_number}}<br>
+
+                 <strong>Vehicle No.:</strong> {{detail.vehilce_number}}<br><br>
+                 <button class="btn btn-warning btn-block">Scheduled</button>
+              </div>
+              </div>
+            </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="col-sm-9 col-md-6 col-lg-8">
+        <div style="width: 100%; position: fixed; border: 2px solid red;">
+          <div id="map"></div>
+        </div>       
+    </div>
+  </div>
+  </div>
+</div>
+  <script>
+    function initMap(){
+      // Map options
+      var options = {
+        zoom:5,
+        center:{lat:25.0961,lng:85.3131}
+      }
+
+      // New map
+      var map = new google.maps.Map(document.getElementById('map'), options);
+
+      // Listen for click on map
+      google.maps.event.addListener(map, 'click', function(event){
+        // Add marker
+        addMarker({coords:event.latLng});
+      });
+
+      /*
+      // Add marker
+      var marker = new google.maps.Marker({
+        position:{lat:42.4668,lng:-70.9495},
+        map:map,
+        icon:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'
+      });
+
+      var infoWindow = new google.maps.InfoWindow({
+        content:'<h1>Lynn MA</h1>'
+      });
+
+      marker.addListener('click', function(){
+        infoWindow.open(map, marker);
+      });
+      */
+//'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrioXidltAtPm_8_r6JzV2gfZCokG7NAugZTu9kCuK0Qht3Wl6',
+      // Array of markers
+       var image = {
+      url: 'http://www.myiconfinder.com/uploads/iconsets/256-256-a5485b563efc4511e0cd8bd04ad0fe9e.png',
+      // This marker is 50 pixels wide by 50 pixels high.
+      size: new google.maps.Size(50, 50),
+      // The origin for this image is (0, 0).
+    };
+
+      var markers = [
+        {
+          coords:{lat:28.7041,lng:77.1025},
+          iconImage:'https://maps.google.com/mapfiles/ms/icons/green.png',
+          content:'<h1>Amit kumar</h1>'
+        },
+        {
+          coords:{lat:28.5355,lng:77.3910},
+          iconImage:'https://maps.google.com/mapfiles/ms/icons/yellow.png',
+          content:'<h1>Amresh verma</h1>'
+        },
+
+      ];
+
+      // Loop through markers
+      for(var i = 0;i < markers.length;i++){
+        // Add marker
+        addMarker(markers[i]);
+      }
+
+      // Add Marker Function
+      function addMarker(props){
+        var marker = new google.maps.Marker({
+          position:props.coords,
+          map:map,
+          //icon:props.iconImage
+        });
+
+        // Check for customicon
+        if(props.iconImage){
+          // Set icon image
+          marker.setIcon(props.iconImage);
+        }
+
+        // Check content
+        if(props.content){
+          var infoWindow = new google.maps.InfoWindow({
+            content:props.content
+          });
+
+          marker.addListener('click', function(){
+            infoWindow.open(map, marker);
+          });
+        }
+      }
+    }
+
+  </script>
+
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQCMa6KelS2dwS3UPS_oR8xDWDlJcLhMo&callback=initMap">
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+</html>
